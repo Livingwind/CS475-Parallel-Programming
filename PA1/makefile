@@ -31,7 +31,7 @@ timer.o: timer.c
 	$(CC) $(SEQFLAGS) -o $@ -c timer.c
 
 clean: 
-	rm -f *.o $(OBJS) $(EXEC)
+	rm -f PA1.tar *.o $(OBJS) $(EXEC)
 
 package: clean
-	tar cvf ./ PA1.tar
+	tar cvf PA1.tar ./*
