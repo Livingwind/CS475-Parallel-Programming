@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
    start_timer();
 
    /* Compute */
+   #pragma omp parallel for private(i,j)
    for ( i=0 ; i < N ; i++ ) {
       c(i) = 0;
       for ( j=0; j < M ; j++ ) {
