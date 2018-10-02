@@ -31,7 +31,7 @@ timer.o: timer.c
 	$(CC) $(SEQFLAGS) -o $@ -c timer.c
 
 clean: 
-	rm -f PA1.tar *.o $(OBJS) $(EXEC)
+	rm -f PA1.tar *.png *.o $(OBJS) $(EXEC)
 
 package: clean
-	tar cvf PA1.tar ./*
+	tar cvf PA1.tar makefile mat_vec.c stencil_1D.c stencil_2D.c report.pdf

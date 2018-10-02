@@ -97,6 +97,8 @@ int main(int argc, char **argv) {
 
      }
 
+   stop_timer();
+   time = elapsed_time ();
 
   
    // End of "Solve for the optimal profit"
@@ -129,8 +131,6 @@ int main(int argc, char **argv) {
         solution[0]=1;
       }
 
-   stop_timer();
-   time = elapsed_time ();
 
       printf("The optimal profit is %d \nTime taken : %lf.\n", table(N-1,C), time);
      

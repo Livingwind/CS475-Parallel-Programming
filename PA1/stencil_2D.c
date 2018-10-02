@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
    while ( t < MAX_ITERATION) {
 
       // Computation
-      #pragma omp parallel for private(i, j) collapse(2)
+      #pragma omp parallel for private(j)
       for ( i=2 ; i < N-2 ; i++ ) {
          for ( j=2 ; j < N-2 ; j++ ) {
             cur(i,j) = (prev(i-2,j)+prev(i-1,j)+prev(i+1,j)+prev(i+2,j)+
