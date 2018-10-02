@@ -14,11 +14,10 @@
 #define    MAX(x,y)   ((x)>(y) ? (x) : (y))
 #define    table(i,j)    table[(i)*(C+1)+(j)]
 
-void print_table(const long table[], long C, long N) {
+void print_row(const long row[], long C) {
   for (long j=0; j<=C; j++){
     printf ("%d\t", j);
-    for (long i=0; i<N; i++)
-      printf ("%d ", table(i, j));
+    printf ("%d ", row[j]);
     printf("\n");
   }
 }
@@ -27,35 +26,27 @@ void get_last_row(long table[], const long weights[], const long profits[], long
                    long low_obj, long up_obj) {
   for (long j=0; j<=C; j++) {
     if (j<weights[low_obj])
-      table(0, j)= 0;
+      table[j]= 0;
     else
-      table(0, j)= profits[low_obj];
+      table[j]= profits[low_obj];
   }
 
   for (long obj_num = low_obj+1; obj_num <= up_obj; obj_num++) {
-    for (long j=0 ; j <= C ; j++ ) {
-      long obj_index = obj_num-low_obj;
-      long prev_obj_index = obj_index - 1;
-
-      if(j<weights[obj_num])
-        table(obj_index, j) = table(prev_obj_index, j);
-      else
-        table(obj_index,j)=MAX(
-            table(prev_obj_index, j),
-            profits[obj_num] + table(prev_obj_index, j - weights[obj_num])
-          );
+    for (long j=C ; j >= weights[obj_num] ; --j ) {
+      table[j]=MAX(
+          table[j],
+          profits[obj_num] + table[j-weights[obj_num]]
+        );
      }
   }
 }
 
 // Determine the optimal cut in the last rows.
-long find_C_star(long C, const long first[], long left_interval_size,
-                 const long second[], long right_interval_size) {
+long find_C_star(long C, const long first[], const long second[]) {
   long max = 0;
   long index = -1;
   for(long i = 0; i <= C; i++) {
-    long sum = first[(left_interval_size-1)*(C+1)+i] +
-               second[(right_interval_size-1)*(C+1)+(C-i)];
+    long sum = first[i] + second[C-i];
     if(sum >= max) {
       max = sum;
       index = i;
@@ -89,16 +80,16 @@ void solve_kp(long solution[], const long weights[], const long profits[],
   // (3)
   long size;
 
-  size = (C+1) * left_interval_size * sizeof(long);
+  size = (C+1) *  sizeof(long);
   long* sub_table1 = (long*)malloc(size);
   get_last_row(sub_table1, weights, profits, C, lower, lower + left_interval_size-1);
 
-  size = (C+1) * right_interval_size * sizeof(long);
+  size = (C+1) * sizeof(long);
   long* sub_table2 = (long*)malloc(size);
   get_last_row(sub_table2, weights, profits, C, lower + left_interval_size, upper-1);
 
   // (4)
-  long C_star = find_C_star(C, sub_table1, left_interval_size, sub_table2, right_interval_size);
+  long C_star = find_C_star(C, sub_table1, sub_table2);
 
   free(sub_table1);
   free(sub_table2);
